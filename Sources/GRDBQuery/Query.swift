@@ -161,13 +161,13 @@ public struct Query<Request: Queryable>: DynamicProperty {
         case initial(Request)
         case binding(Binding<Request>)
     }
-    
+
     /// Database access
-    @Environment private var database: Request.DatabaseContext
+    private var database: Request.DatabaseContext
     
     /// Database access
     @Environment(\.queryObservationEnabled) private var queryObservationEnabled
-    
+
     /// The object that keeps on observing the database as long as it is alive.
     @StateObject private var tracker = Tracker()
     
@@ -216,10 +216,10 @@ public struct Query<Request: Queryable>: DynamicProperty {
         _ request: Request,
         in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
     {
-        self._database = Environment(keyPath)
+        self.database = Environment(keyPath).wrappedValue
         self.configuration = .initial(request)
     }
-    
+
     /// Creates a `Query`, given a ``Queryable`` request, and a key path to the
     /// database in the SwiftUI environment.
     ///
@@ -251,10 +251,19 @@ public struct Query<Request: Queryable>: DynamicProperty {
         constant request: Request,
         in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
     {
-        self._database = Environment(keyPath)
+        self.database = Environment(keyPath).wrappedValue
         self.configuration = .constant(request)
     }
-    
+
+    /// Creates a `Query`, given a queryable request and database context
+    public init(
+        request: Request,
+        database: Request.DatabaseContext)
+    {
+        self.database = database
+        configuration = .constant(request)
+    }
+
     /// Creates a `Query`, given a SwiftUI binding to its ``Queryable`` request,
     /// and a key path to the database in the SwiftUI environment.
     ///
@@ -295,7 +304,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
         _ request: Binding<Request>,
         in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
     {
-        self._database = Environment(keyPath)
+        self.database = Environment(keyPath).wrappedValue
         self.configuration = .binding(request)
     }
     
@@ -306,7 +315,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
             configuration: configuration,
             database: database)
     }
-    
+
     /// A wrapper of the underlying `Query` that creates bindings to
     /// its ``Queryable`` request.
     ///
@@ -318,7 +327,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
     /// - ``subscript(dynamicMember:)``
     @dynamicMemberLookup public struct Wrapper {
         fileprivate let query: Query
-        
+
         /// Returns a binding to the ``Queryable`` request itself.
         ///
         /// Learn how to use this binding in the <doc:QueryableParameters> guide.
@@ -347,7 +356,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
                     }
                 })
         }
-        
+
         /// Returns a binding to the property of the ``Queryable`` request, at
         /// a given key path.
         ///
@@ -364,11 +373,11 @@ public struct Query<Request: Queryable>: DynamicProperty {
         /// The database value. Published so that view is redrawn when
         /// the value changes.
         @Published var value: Request.Value?
-        
+
         /// The request set by the `Wrapper.request` binding.
         /// When modified, we wait for the next `update` to apply.
         @Published var request: Request?
-        
+
         // Actual subscription
         private var trackedRequest: Request?
         private var cancellable: AnyCancellable?
@@ -395,7 +404,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
             case let .binding(binding):
                 newRequest = binding.wrappedValue
             }
-            
+
             // Give up if the request is already tracked.
             if newRequest == trackedRequest {
                 return
@@ -404,7 +413,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
             // Update inner state.
             trackedRequest = newRequest
             request = newRequest
-            
+
             // Start tracking the new request
             cancellable = newRequest.publisher(in: database).sink(
                 receiveCompletion: { _ in

@@ -51,7 +51,7 @@ GRDBQuery provides two property wrappers:
     
     It fits well the view models of the MVVM architecture, as well as dependency injection. 
 
-Both property wrappers can work together, so that developers can run quick experiments, build versatile previews, and also apply strict patterns and conventions. Pick `@Query`, or `@EnvironmentStateObject`, depending on your needs!
+## How to Handle Database Errors?
 
 ## Why GRDBQuery?
 
