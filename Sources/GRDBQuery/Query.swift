@@ -349,6 +349,7 @@ public struct Query<Request: Queryable>: DynamicProperty {
                         // Constant request does not change
                         break
                     case .initial:
+                        query.tracker.objectWillChange.send()
                         query.tracker.request = newRequest
                     case let .binding(binding):
                         query.tracker.objectWillChange.send()
@@ -372,12 +373,10 @@ public struct Query<Request: Queryable>: DynamicProperty {
     private class Tracker: ObservableObject {
         /// The database value. Published so that view is redrawn when
         /// the value changes.
-        @Published var value: Request.Value?
-
+        var value: Request.Value?
         /// The request set by the `Wrapper.request` binding.
         /// When modified, we wait for the next `update` to apply.
-        @Published var request: Request?
-
+        var request: Request?
         // Actual subscription
         private var trackedRequest: Request?
         private var cancellable: AnyCancellable?
@@ -415,14 +414,23 @@ public struct Query<Request: Queryable>: DynamicProperty {
             request = newRequest
 
             // Start tracking the new request
+            var isUpdating = true
             cancellable = newRequest.publisher(in: database).sink(
                 receiveCompletion: { _ in
                     // Ignore errors
                 },
                 receiveValue: { [weak self] value in
                     guard let self = self else { return }
+                    if !isUpdating {
+                        // Avoid the runtime warning in the case of publishers
+                        // that publish values right on subscription:
+                        // > Publishing changes from within view updates is not
+                        // > allowed, this will cause undefined behavior.
+                        self.objectWillChange.send()
+                    }
                     self.value = value
                 })
+            isUpdating = false
         }
     }
 }
