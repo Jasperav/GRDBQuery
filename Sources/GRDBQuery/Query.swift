@@ -12,7 +12,7 @@ public struct Query<Request: Queryable> {
     }
     
     /// Database access
-    @Environment private var database: Request.DatabaseContext
+    private var database: Request.DatabaseContext
     
     /// Database access
     @Environment(\.queryObservationEnabled) private var queryObservationEnabled
@@ -72,7 +72,7 @@ public struct Query<Request: Queryable> {
         _ request: Request,
         in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
     {
-        self._database = Environment(keyPath)
+        self.database = Environment(keyPath).wrappedValue
         self.configuration = .initial(request)
     }
     
@@ -107,8 +107,15 @@ public struct Query<Request: Queryable> {
         constant request: Request,
         in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
     {
-        self._database = Environment(keyPath)
+        self.database = Environment(keyPath).wrappedValue
         self.configuration = .constant(request)
+    }
+
+    public init(
+            request: Request,
+            database: Request.DatabaseContext) {
+        self.database = database
+        configuration = .constant(request)
     }
     
     /// Creates a `Query`, given a SwiftUI binding to its ``Queryable`` request,
