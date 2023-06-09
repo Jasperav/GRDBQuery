@@ -158,7 +158,7 @@ public struct Query<Request: Queryable> {
         _ request: Binding<Request>,
         in keyPath: KeyPath<EnvironmentValues, Request.DatabaseContext>)
     {
-        self._database = Environment(keyPath)
+        self.database = Environment(keyPath).wrappedValue
         self.configuration = .binding(request)
     }
     
