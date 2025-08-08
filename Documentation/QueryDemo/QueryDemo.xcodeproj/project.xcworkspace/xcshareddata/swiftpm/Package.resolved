@@ -1,34 +1,15 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "GRDB",
-        "repositoryURL": "https://github.com/groue/GRDB.swift.git",
-        "state": {
-          "branch": null,
-          "revision": "2d19cab2b525f885ee8d7efec96093431f6b5f20",
-          "version": "6.10.0"
-        }
-      },
-      {
-        "package": "SwiftDocCPlugin",
-        "repositoryURL": "https://github.com/apple/swift-docc-plugin",
-        "state": {
-          "branch": null,
-          "revision": "9b1258905c21fc1b97bf03d1b4ca12c4ec4e5fda",
-          "version": "1.2.0"
-        }
-      },
-      {
-        "package": "SymbolKit",
-        "repositoryURL": "https://github.com/apple/swift-docc-symbolkit",
-        "state": {
-          "branch": null,
-          "revision": "b45d1f2ed151d057b54504d653e0da5552844e34",
-          "version": "1.0.0"
-        }
+  "originHash" : "b4eac9cafc01c23122ae7ba2e02cc9000a71f2453039eb2258b7e29e406176c4",
+  "pins" : [
+    {
+      "identity" : "grdb.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/groue/GRDB.swift.git",
+      "state" : {
+        "revision" : "47a7ddf08a619fff3e215df321fba9f4d77413e5",
+        "version" : "7.0.0-beta"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 3
 }

@@ -1,5 +1,38 @@
 # Release Notes
 
+## v0.11.0
+
+Released on 2025/03/15
+
+- **New**: adds QueryableOptions.assertNoFailure to treat errors as fatalError by [@ChristophKaser](https://github.com/ChristophKaser) in [#64](https://github.com/groue/GRDBQuery/pull/64)
+
+## v0.10.1
+
+Released on 2024/09/29
+
+- **Fixed**: Have SPI build Swift 6 documentation
+
+## v0.10.0
+
+Released on 2024/09/28
+
+- **Breaking Change**: Depend on GRDB 7.0.0-beta+ by [@groue](https://github.com/groue) in [#58]https://github.com/groue/GRDBQuery/pull/58)
+
+
+## v0.9.0
+
+Released on 2024/07/20
+
+- **New** [#52](https://github.com/groue/GRDBQuery/pull/52): DatabaseContext, and convenience queryable protocols.
+
+See the [Migrating To GRDBQuery 0.9](https://swiftpackageindex.com/groue/grdbquery/0.9.0/documentation/grdbquery/migratingtogrdbquery09) guide.
+
+## v0.8.0
+
+Released on 2023/12/01
+
+- **New** [#49](https://github.com/groue/GRDBQuery/pull/49): Make Value an associated type of Queryable.
+
 ## v0.7.0
 
 Released on 2023/03/25
