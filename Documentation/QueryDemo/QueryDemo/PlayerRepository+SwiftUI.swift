@@ -14,20 +14,18 @@ private struct PlayerRepositoryKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var playerRepository: PlayerRepository {
+    fileprivate(set) var playerRepository: PlayerRepository {
         get { self[PlayerRepositoryKey.self] }
         set { self[PlayerRepositoryKey.self] = newValue }
     }
 }
 
-// MARK: - @Query convenience
-
-// Help views and previews observe the database with the @Query property wrapper.
-// See <https://swiftpackageindex.com/groue/grdbquery/documentation/grdbquery/gettingstarted>
-extension Query where Request.DatabaseContext == PlayerRepository {
-    /// Creates a `Query`, given an initial `Queryable` request that
-    /// uses `PlayerRepository` as a `DatabaseContext`.
-    init(_ request: Request) {
-        self.init(request, in: \.playerRepository)
+extension View {
+    /// Sets both the `playerRepository` (for writes) and `databaseContext`
+    /// (for `@Query`) environment values.
+    func playerRepository(_ repository: PlayerRepository) -> some View {
+        self
+            .environment(\.playerRepository, repository)
+            .databaseContext(.readOnly { repository.reader })
     }
 }

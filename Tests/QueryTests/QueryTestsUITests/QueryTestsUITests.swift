@@ -16,7 +16,7 @@ class QueryTestsUITests: XCTestCase {
     // Default request:
     // - The value holding the `@Query` can alter the request.
     // - The container view can NOT alter the request.
-    func testDefaultRequest() throws {
+    @MainActor func testDefaultRequest() throws {
         let app = XCUIApplication()
         app.launch()
         
@@ -25,7 +25,7 @@ class QueryTestsUITests: XCTestCase {
             app.buttons[XCUIIdentifierFullScreenWindow].tap()
         }
         
-        app.tabs["Tab 1"].tap()
+        app.radioButtons["Tab 1"].tap()
         
         let text = app.staticTexts["default.value"]
         let changeRequestButton = app.buttons["default.changeRequestButton"]
@@ -65,7 +65,7 @@ class QueryTestsUITests: XCTestCase {
     // Initial request:
     // - The value holding the `@Query` can alter the request.
     // - The container view can NOT alter the request.
-    func testInitialRequest() throws {
+    @MainActor func testInitialRequest() throws {
         let app = XCUIApplication()
         app.launch()
         
@@ -74,7 +74,7 @@ class QueryTestsUITests: XCTestCase {
             app.buttons[XCUIIdentifierFullScreenWindow].tap()
         }
         
-        app.tabs["Tab 1"].tap()
+        app.radioButtons["Tab 1"].tap()
         
         let text = app.staticTexts["initial.value"]
         let changeRequestButton = app.buttons["initial.changeRequestButton"]
@@ -114,7 +114,7 @@ class QueryTestsUITests: XCTestCase {
     // Constant request:
     // - The value holding the `@Query` can NOT alter the request.
     // - The container view can alter the request.
-    func testConstantRequest() throws {
+    @MainActor func testConstantRequest() throws {
         let app = XCUIApplication()
         app.launch()
         
@@ -123,7 +123,7 @@ class QueryTestsUITests: XCTestCase {
             app.buttons[XCUIIdentifierFullScreenWindow].tap()
         }
         
-        app.tabs["Tab 1"].tap()
+        app.radioButtons["Tab 1"].tap()
         
         let text = app.staticTexts["constant.value"]
         let changeRequestButton = app.buttons["constant.changeRequestButton"]
@@ -163,7 +163,7 @@ class QueryTestsUITests: XCTestCase {
     // Request binding:
     // - The value holding the `@Query` can alter the request.
     // - The container view can alter the request.
-    func testBindingRequest() throws {
+    @MainActor func testBindingRequest() throws {
         let app = XCUIApplication()
         app.launch()
         
@@ -172,7 +172,7 @@ class QueryTestsUITests: XCTestCase {
             app.buttons[XCUIIdentifierFullScreenWindow].tap()
         }
         
-        app.tabs["Tab 1"].tap()
+        app.radioButtons["Tab 1"].tap()
         
         let text = app.staticTexts["binding.value"]
         let changeRequestButton = app.buttons["binding.changeRequestButton"]
@@ -209,7 +209,7 @@ class QueryTestsUITests: XCTestCase {
         XCTAssertEqual(text.value as? String, "36")
     }
     
-    func testQueryObservationAlways() {
+    @MainActor func testQueryObservationAlways() {
         let app = XCUIApplication()
         app.launch()
         
@@ -222,24 +222,24 @@ class QueryTestsUITests: XCTestCase {
         let notificationButton = app.buttons["queryObservation.always.notificationButton"]
         let sharedNotificationButton = app.buttons["shared.notificationButton"]
         
-        app.tabs["queryObservation.always"].tap()
-        app.tabs["Tab 1"].tap()
+        app.radioButtons["queryObservation.always"].tap()
+        app.radioButtons["Tab 1"].tap()
         sharedNotificationButton.tap()
         
-        app.tabs["queryObservation.always"].tap()
+        app.radioButtons["queryObservation.always"].tap()
         XCTAssertEqual(text.value as? String, "7")
         
         notificationButton.tap()
         XCTAssertEqual(text.value as? String, "8")
         
-        app.tabs["Tab 1"].tap()
+        app.radioButtons["Tab 1"].tap()
         sharedNotificationButton.tap()
         
-        app.tabs["queryObservation.always"].tap()
+        app.radioButtons["queryObservation.always"].tap()
         XCTAssertEqual(text.value as? String, "9")
     }
     
-    func testQueryObservationOnRender() {
+    @MainActor func testQueryObservationOnRender() {
         // TODO: find a way to have a testable difference between onRender and onAppear
         let app = XCUIApplication()
         app.launch()
@@ -253,24 +253,24 @@ class QueryTestsUITests: XCTestCase {
         let notificationButton = app.buttons["queryObservation.onRender.notificationButton"]
         let sharedNotificationButton = app.buttons["shared.notificationButton"]
         
-        app.tabs["queryObservation.onRender"].tap()
-        app.tabs["Tab 1"].tap()
+        app.radioButtons["queryObservation.onRender"].tap()
+        app.radioButtons["Tab 1"].tap()
         sharedNotificationButton.tap()
         
-        app.tabs["queryObservation.onRender"].tap()
+        app.radioButtons["queryObservation.onRender"].tap()
         XCTAssertEqual(text.value as? String, "6")
         
         notificationButton.tap()
         XCTAssertEqual(text.value as? String, "7")
         
-        app.tabs["Tab 1"].tap()
+        app.radioButtons["Tab 1"].tap()
         sharedNotificationButton.tap()
         
-        app.tabs["queryObservation.onRender"].tap()
+        app.radioButtons["queryObservation.onRender"].tap()
         XCTAssertEqual(text.value as? String, "6")
     }
     
-    func testQueryObservationOnAppear() {
+    @MainActor func testQueryObservationOnAppear() {
         let app = XCUIApplication()
         app.launch()
         
@@ -283,20 +283,20 @@ class QueryTestsUITests: XCTestCase {
         let notificationButton = app.buttons["queryObservation.onAppear.notificationButton"]
         let sharedNotificationButton = app.buttons["shared.notificationButton"]
         
-        app.tabs["queryObservation.onAppear"].tap()
-        app.tabs["Tab 1"].tap()
+        app.radioButtons["queryObservation.onAppear"].tap()
+        app.radioButtons["Tab 1"].tap()
         sharedNotificationButton.tap()
         
-        app.tabs["queryObservation.onAppear"].tap()
+        app.radioButtons["queryObservation.onAppear"].tap()
         XCTAssertEqual(text.value as? String, "6")
         
         notificationButton.tap()
         XCTAssertEqual(text.value as? String, "7")
         
-        app.tabs["Tab 1"].tap()
+        app.radioButtons["Tab 1"].tap()
         sharedNotificationButton.tap()
         
-        app.tabs["queryObservation.onAppear"].tap()
+        app.radioButtons["queryObservation.onAppear"].tap()
         XCTAssertEqual(text.value as? String, "6")
     }
 }
