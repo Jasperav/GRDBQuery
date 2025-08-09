@@ -119,7 +119,7 @@ import SwiftUI
 
     public init(
             request: Request,
-            database: Request.DatabaseContext) {
+            database: Request.Context) {
         self.database = database
         configuration = .constant(request)
     }
